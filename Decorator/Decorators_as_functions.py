@@ -1,3 +1,7 @@
+from functools import wraps
+from time import time
+
+
 # def be_polite(fn):
 #     def wrapper():
 #         print("What a pleasure to meet you!")
@@ -44,17 +48,47 @@
 
 # Using wraps to preserve metadata
 
-def log_function_data(fn):
+# def log_function_data(fn):
+#
+#     @wraps(fn)
+#     def wrapper(*args, **kwargs):
+#         '''I am wrapper function'''
+#         print(f"You are about to call {fn.__name__} function")
+#         print(f"Here's the documentation: {fn.__doc__}")
+#         return fn(*args, **kwargs)
+#     return wrapper
+# @log_function_data
+# def add(x, y):
+#     '''Adds the numbers together.'''
+#     return x + y
+#
+#
+# print(add(5, 6))
+# print(add.__doc__)
+# print(add.__name__)
+
+# Building a speed test decorator
+
+def speed_test(fn):
+    @wraps(fn)
     def wrapper(*args, **kwargs):
-        '''I am wrapper function'''
-        print(f"You are about to call {fn.__name__} function")
-        print(f"Here's the documentation: {fn.__doc__}")
-        return fn(*args, **kwargs)
+        start_time = time()
+        result = fn(*args, **kwargs)
+        end_time = time()
+        print(f"Time Elapsed: {end_time-start_time}")
+        return result
+
     return wrapper
-@log_function_data
-def add(x, y):
-    '''Adds the numbers together.'''
-    return x + y
 
 
-print(add(5, 6))
+@speed_test
+def sum_nums_gen():
+    return sum(x for x in range(1000000))
+
+@speed_test
+def sum_nums_list():
+    return sum([x for x in range(1000000)])
+
+
+print(sum_nums_gen())
+print(sum_nums_list())
