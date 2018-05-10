@@ -25,8 +25,8 @@
 # Decorator with different signature
 
 def shout(fn):
-    def wrapper(name):
-        return fn(name).upper()
+    def wrapper(*args, **kwargs):
+        return fn(*args, **kwargs).upper()
     return wrapper
 
 @shout
@@ -40,3 +40,4 @@ def order(main, side):
 
 
 print(greet('Touhid'))
+print(order('burger', 'fries'))
