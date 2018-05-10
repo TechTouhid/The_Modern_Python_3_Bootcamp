@@ -24,20 +24,37 @@
 
 # Decorator with different signature
 
-def shout(fn):
+# def shout(fn):
+#     def wrapper(*args, **kwargs):
+#         return fn(*args, **kwargs).upper()
+#     return wrapper
+#
+# @shout
+# def greet(name):
+#     return f'Hi I\'m {name}'
+#
+#
+# @shout
+# def order(main, side):
+#     return f"Hi, I'd like the {main}, with a side of {side}, please."
+#
+#
+# print(greet('Touhid'))
+# print(order('burger', 'fries'))
+
+# Using wraps to preserve metadata
+
+def log_function_data(fn):
     def wrapper(*args, **kwargs):
-        return fn(*args, **kwargs).upper()
+        '''I am wrapper function'''
+        print(f"You are about to call {fn.__name__} function")
+        print(f"Here's the documentation: {fn.__doc__}")
+        return fn(*args, **kwargs)
     return wrapper
-
-@shout
-def greet(name):
-    return f'Hi I\'m {name}'
-
-
-@shout
-def order(main, side):
-    return f"Hi, I'd like the {main}, with a side of {side}, please."
+@log_function_data
+def add(x, y):
+    '''Adds the numbers together.'''
+    return x + y
 
 
-print(greet('Touhid'))
-print(order('burger', 'fries'))
+print(add(5, 6))
