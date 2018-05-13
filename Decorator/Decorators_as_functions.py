@@ -69,26 +69,58 @@ from time import time
 
 # Building a speed test decorator
 
-def speed_test(fn):
-    @wraps(fn)
-    def wrapper(*args, **kwargs):
-        start_time = time()
-        result = fn(*args, **kwargs)
-        end_time = time()
-        print(f"Time Elapsed: {end_time-start_time}")
-        return result
+# def speed_test(fn):
+#     @wraps(fn)
+#     def wrapper(*args, **kwargs):
+#         start_time = time()
+#         result = fn(*args, **kwargs)
+#         end_time = time()
+#         print(f"Time Elapsed: {end_time-start_time}")
+#         return result
+#
+#     return wrapper
+#
+#
+# @speed_test
+# def sum_nums_gen():
+#     return sum(x for x in range(1000000))
+#
+# @speed_test
+# def sum_nums_list():
+#     return sum([x for x in range(1000000)])
+#
+#
+# print(sum_nums_gen())
+# print(sum_nums_list())
+#
 
-    return wrapper
+# Writing an ensure first arg is decorator
+
+def ensure_first_arg_is(val):
+    def inner(fn):
+        @wraps(fn)
+        def wrapper(*args, **kwargs):
+            if args and args[0] != val:
+                return f'First arg needs to be {val}'
+            return fn(*args, **kwargs)
+        return wrapper
+
+    return inner
 
 
-@speed_test
-def sum_nums_gen():
-    return sum(x for x in range(1000000))
-
-@speed_test
-def sum_nums_list():
-    return sum([x for x in range(1000000)])
+@ensure_first_arg_is('burrito')
+def fav_foods(*foods):
+    print(foods)
 
 
-print(sum_nums_gen())
-print(sum_nums_list())
+print((fav_foods('burrito', 'ice cream')))
+print(fav_foods('ice cream', 'burrito'))
+
+
+@ensure_first_arg_is(10)
+def add_to_ten(num1, num2):
+    return num1 + num2
+
+
+print(add_to_ten(10, 12))
+print(add_to_ten(1, 2))
